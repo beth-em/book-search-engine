@@ -14,9 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/graphql": "^14.2.3",
+    "apollo-server-express": "^3.13.0",
     "bcrypt": "^4.0.1",
-    "brcypt": "^1.0.1",
     "express": "^4.19.2",
+    "graphql": "^16.10.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^8.0.0"
   },
@@ -28,5 +30,8 @@
     "dotenv": "^16.4.5",
     "nodemon": "^3.1.0",
     "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
