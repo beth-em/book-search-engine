@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+/*import type { Request, Response } from 'express';
 // import user model
 import User from '../models/User.js';
 // import sign token function from auth
@@ -72,4 +72,4 @@ export const deleteBook = async (req: Request, res: Response) => {
     return res.status(404).json({ message: "Couldn't find user with this id!" });
   }
   return res.json(updatedUser);
-};
+};*/
