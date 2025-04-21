@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import {
-  Container,
-  Col,
-  Form,
-  Button,
-  Card,
-  Row
-} from 'react-bootstrap';
+import { Container, Col, Form, Button, Card, Row } from 'react-bootstrap';
+import { useMutation } from '@apollo/client'; 
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { SAVE_BOOK } from '../graphql/mutations';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
@@ -25,6 +19,7 @@ const SearchBooks = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
+  const [saveBookMutation] = useMutation(SAVE_BOOK);
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
@@ -34,16 +29,12 @@ const SearchBooks = () => {
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!searchInput) {
-      return false;
-    }
+    if (!searchInput) return;
 
     try {
-      const response = await searchGoogleBooks(searchInput);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}`);
+      
+      if (!response.ok) throw new Error('something went wrong!');
 
       const { items } = await response.json();
 
@@ -53,6 +44,7 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        link: `https://books.google.com/books?id${book.id}`,
       }));
 
       setSearchedBooks(bookData);
@@ -70,16 +62,22 @@ const SearchBooks = () => {
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-    if (!token) {
-      return false;
-    }
+    if (!token) return false;
 
+    // Send book input to saveBook mutation
     try {
-      const response = await saveBook(bookToSave, token);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      await saveBookMutation({
+        variables: {
+          input: {
+            bookId: bookToSave.bookId,
+            authors: bookToSave.authors,
+            description: bookToSave.description,
+            title: bookToSave.title,
+            image: bookToSave.image,
+            link: bookToSave.link,
+          },
+        },
+      });
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);

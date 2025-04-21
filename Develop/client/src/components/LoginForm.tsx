@@ -2,22 +2,32 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
-import { loginUser } from '../utils/API';
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER } from '../graphql/mutations';
 import Auth from '../utils/auth';
 import type { User } from '../models/User';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
 const LoginForm = ({}: { handleModalClose: () => void }) => {
-  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
+  const [userFormData, setUserFormData] = useState<User>({ 
+    username: '', 
+    email: '', 
+    password: '', 
+    savedBooks: [],
+  });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  // Apollo mutation hook for logging in
+  const [loginUser] = useMutation(LOGIN_USER);
+
+  // Handle input updates
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  // Handle form submissions and runs the login mutation
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -29,14 +39,15 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
     }
 
     try {
-      const response = await loginUser(userFormData);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token } = await response.json();
-      Auth.login(token);
+      const { data } = await loginUser ({
+        variables: {
+          email: userFormData.email!,
+          password: userFormData.password!,
+        },
+      });
+      
+      // Save the returned token in localStorage
+      Auth.login(data.login.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -51,7 +62,6 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
   };
 
   return (
-    <>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
           Something went wrong with your login credentials!
@@ -88,7 +98,6 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
           Submit
         </Button>
       </Form>
-    </>
   );
 };
 
