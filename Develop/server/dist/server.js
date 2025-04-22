@@ -30,9 +30,9 @@ async function startApolloServer() {
     server.applyMiddleware({ app: app });
     // if we're in production, serve client/build as static assets
     if (process.env.NODE_ENV === 'production') {
-        app.use(express.static(path.join(__dirname, '../client/dist')));
+        app.use(express.static(path.join(__dirname, '../../../client/dist')));
         app.get('*', (_req, res) => {
-            res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+            res.sendFile(path.join(__dirname, '../../../client/dist/index.html'));
         });
     }
     db.once('open', () => {
