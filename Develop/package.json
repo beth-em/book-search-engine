@@ -4,9 +4,10 @@
   "main": "server/dist/server.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build -w client && tsc",
     "start": "node server/dist/server.js",
-    "watch": "nodemon server/dist/server.js"
+    "watch": "nodemon server/dist/server.js",
+    "postinstall": "npm install --prefix client"
   },
   "dependencies": {
     "apollo-server-express": "^3.13.0",
