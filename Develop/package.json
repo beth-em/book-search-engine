@@ -4,7 +4,8 @@
   "main": "server/dist/server.js",
   "type": "module",
   "scripts": {
-    "build": "npm run build -w client && tsc",
+    "build": "npm run client-build && tsc",
+    "client-build": "cd client && npm install && npm run build",
     "start": "node server/dist/server.js",
     "watch": "nodemon server/dist/server.js",
     "postinstall": "npm install --prefix client"
