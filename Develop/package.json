@@ -1,20 +1,14 @@
 {
-  "name": "server",
+  "name": "book-search-engine",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/server.js",
+  "main": "server/dist/server.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node server/dist/server.js",
-    "watch": "nodemon server/dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "nodemon server/dist/server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/graphql": "^14.2.3",
     "apollo-server-express": "^3.13.0",
     "bcrypt": "^4.0.1",
     "dotenv": "^16.5.0",
