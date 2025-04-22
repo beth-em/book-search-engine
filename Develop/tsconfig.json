@@ -1,15 +1,14 @@
 {
-  "extends": "../tsconfig.json",
-    "compilerOptions": {
-      "target": "ESNext",
-      "module": "ESNext",
-      "moduleResolution": "Node",
-      "outDir": "server/dist",
-      "rootDir": "server/src",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true
-    },
-    "include": ["server/src"],
-    "exclude": ["server/node_modules"]
-  } 
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "server/dist",
+    "rootDir": "server/src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["server/src"],
+  "exclude": ["server/node_modules"]
+} 
