@@ -8,7 +8,7 @@
     "client-build": "cd client && npm install && npm run build",
     "start": "node server/dist/server.js",
     "watch": "nodemon server/dist/server.js",
-    "postinstall": "npm install --prefix client"
+    "postinstall": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "apollo-server-express": "^3.13.0",
